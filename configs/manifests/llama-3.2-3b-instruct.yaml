@@ -1,0 +1,125 @@
+# iNIM Model Manifest: Meta Llama 3.2 3B Instruct
+# This manifest defines serving profiles for different Intel GPU tiers.
+# The orchestrator selects the best profile based on detected GPU hardware.
+
+version: "1.0"
+model_name: "meta-llama/Llama-3.2-3B-Instruct"
+model_id: "llama-3.2-3b-instruct"
+
+profiles:
+  # -------------------------------------------------------------------------
+  # Arc Discrete GPU (High Quality) — INT4 with XMX acceleration
+  # Best default for Arc A770/A750/B580/B770
+  # -------------------------------------------------------------------------
+  - id: "a3f9b72c1d45e68f"
+    description: "ovms-int4-arc-hq-cb"
+    backend: "ovms"
+    precision: "int4"
+    pipeline_type: "continuous_batching"
+    device_filter:
+      min_vram_mb: 8192
+      arch_tiers: ["arc_alchemist", "arc_battlemage"]
+      xmx_required: false
+    ovms_config:
+      max_num_seqs: 256
+      cache_size: 4
+      dynamic_quantization: true
+      kv_cache_precision: "int8"
+    source_model:
+      hf_repo: "OpenVINO/Llama-3.2-3B-Instruct-int4-ov"
+      format: "openvino_ir"
+    memory_estimate_mb: 7800
+    runnable: true
+
+  # -------------------------------------------------------------------------
+  # Arc Discrete GPU (Small) — INT4 for A380/A310 (6GB/4GB VRAM)
+  # -------------------------------------------------------------------------
+  - id: "d4e5f6a7b8c9d0e1"
+    description: "ovms-int4-arc-cb"
+    backend: "ovms"
+    precision: "int4"
+    pipeline_type: "continuous_batching"
+    device_filter:
+      min_vram_mb: 4096
+      arch_tiers: ["arc_alchemist", "arc_battlemage"]
+      xmx_required: false
+    ovms_config:
+      max_num_seqs: 128
+      cache_size: 2
+      dynamic_quantization: true
+      kv_cache_precision: "int8"
+    source_model:
+      hf_repo: "OpenVINO/Llama-3.2-3B-Instruct-int4-ov"
+      format: "openvino_ir"
+    memory_estimate_mb: 3500
+    runnable: true
+
+  # -------------------------------------------------------------------------
+  # Xe Integrated GPU (Core Ultra) — INT4
+  # For Meteor Lake / Lunar Lake / Arrow Lake iGPUs
+  # -------------------------------------------------------------------------
+  - id: "b7e2a14f8c9d03e5"
+    description: "ovms-int4-igpu-cb"
+    backend: "ovms"
+    precision: "int4"
+    pipeline_type: "continuous_batching"
+    device_filter:
+      min_vram_mb: 4096
+      arch_tiers: ["xe_integrated"]
+      xmx_required: false
+    ovms_config:
+      max_num_seqs: 64
+      cache_size: 2
+      dynamic_quantization: false
+      kv_cache_precision: "fp16"
+    source_model:
+      hf_repo: "OpenVINO/Llama-3.2-3B-Instruct-int4-ov"
+      format: "openvino_ir"
+    memory_estimate_mb: 3900
+    runnable: true
+
+  # -------------------------------------------------------------------------
+  # UHD Integrated GPU — INT4 Symmetric (stateful, low-memory)
+  # For Gen11 UHD iGPUs with limited shared memory
+  # -------------------------------------------------------------------------
+  - id: "e1f2a3b4c5d6e7f8"
+    description: "ovms-int4-igpu-st"
+    backend: "ovms"
+    precision: "int4-sym"
+    pipeline_type: "stateful"
+    device_filter:
+      min_vram_mb: 2048
+      arch_tiers: ["uhd_integrated"]
+      xmx_required: false
+    ovms_config:
+      max_num_seqs: 16
+      cache_size: 1
+      dynamic_quantization: false
+      kv_cache_precision: "fp16"
+    source_model:
+      hf_repo: "OpenVINO/Llama-3.2-3B-Instruct-int4-ov"
+      format: "openvino_ir"
+    memory_estimate_mb: 2500
+    runnable: true
+
+  # -------------------------------------------------------------------------
+  # Arc Discrete GPU — FP16 (highest accuracy, requires 16GB+ VRAM)
+  # -------------------------------------------------------------------------
+  - id: "c8d1f25a9e0b47c3"
+    description: "ovms-fp16-arc-hq-cb"
+    backend: "ovms"
+    precision: "fp16"
+    pipeline_type: "continuous_batching"
+    device_filter:
+      min_vram_mb: 16384
+      arch_tiers: ["arc_alchemist", "arc_battlemage"]
+    ovms_config:
+      max_num_seqs: 512
+      cache_size: 8
+      dynamic_quantization: false
+      kv_cache_precision: "fp16"
+    source_model:
+      hf_repo: "meta-llama/Llama-3.2-3B-Instruct"
+      format: "pytorch"
+    memory_estimate_mb: 15500
+    runnable: true

@@ -1,0 +1,62 @@
+# iNIM Model Manifest: Qwen3 8B
+version: "1.0"
+model_name: "Qwen/Qwen3-8B"
+model_id: "qwen3-8b"
+
+profiles:
+  - id: "qwen3-int4-arc-hq-cb"
+    description: "ovms-int4-arc-hq-cb"
+    backend: "ovms"
+    precision: "int4"
+    pipeline_type: "continuous_batching"
+    device_filter:
+      min_vram_mb: 8192
+      arch_tiers: ["arc_alchemist", "arc_battlemage"]
+    ovms_config:
+      max_num_seqs: 128
+      cache_size: 4
+      dynamic_quantization: true
+      kv_cache_precision: "int8"
+    source_model:
+      hf_repo: "OpenVINO/Qwen3-8B-int4-ov"
+      format: "openvino_ir"
+    memory_estimate_mb: 7500
+    runnable: true
+
+  - id: "qwen3-int4-igpu-cb"
+    description: "ovms-int4-igpu-cb"
+    backend: "ovms"
+    precision: "int4"
+    pipeline_type: "continuous_batching"
+    device_filter:
+      min_vram_mb: 6144
+      arch_tiers: ["xe_integrated"]
+    ovms_config:
+      max_num_seqs: 32
+      cache_size: 2
+      dynamic_quantization: false
+      kv_cache_precision: "fp16"
+    source_model:
+      hf_repo: "OpenVINO/Qwen3-8B-int4-ov"
+      format: "openvino_ir"
+    memory_estimate_mb: 5500
+    runnable: true
+
+  - id: "qwen3-int8-arc-hq-cb"
+    description: "ovms-int8-arc-hq-cb"
+    backend: "ovms"
+    precision: "int8"
+    pipeline_type: "continuous_batching"
+    device_filter:
+      min_vram_mb: 12288
+      arch_tiers: ["arc_alchemist", "arc_battlemage"]
+    ovms_config:
+      max_num_seqs: 128
+      cache_size: 4
+      dynamic_quantization: false
+      kv_cache_precision: "fp16"
+    source_model:
+      hf_repo: "Qwen/Qwen3-8B"
+      format: "pytorch"
+    memory_estimate_mb: 11000
+    runnable: true

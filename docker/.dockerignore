@@ -1,0 +1,23 @@
+# iNIM Docker build context ignores
+.git
+.gitignore
+__pycache__
+*.pyc
+*.pyo
+*.egg-info
+*.egg
+.eggs
+dist
+build
+.env
+.env.local
+*.md
+!README.md
+tests/
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.venv
+venv
+node_modules
+*.log

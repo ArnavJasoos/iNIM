@@ -1,0 +1,62 @@
+# iNIM Model Manifest: Mistral 7B Instruct v0.3
+version: "1.0"
+model_name: "mistralai/Mistral-7B-Instruct-v0.3"
+model_id: "mistral-7b-instruct-v0.3"
+
+profiles:
+  - id: "mistral7b-int4-arc-hq-cb"
+    description: "ovms-int4-arc-hq-cb"
+    backend: "ovms"
+    precision: "int4"
+    pipeline_type: "continuous_batching"
+    device_filter:
+      min_vram_mb: 8192
+      arch_tiers: ["arc_alchemist", "arc_battlemage"]
+    ovms_config:
+      max_num_seqs: 128
+      cache_size: 4
+      dynamic_quantization: true
+      kv_cache_precision: "int8"
+    source_model:
+      hf_repo: "OpenVINO/Mistral-7B-Instruct-v0.3-int4-ov"
+      format: "openvino_ir"
+    memory_estimate_mb: 7200
+    runnable: true
+
+  - id: "mistral7b-int4-igpu-cb"
+    description: "ovms-int4-igpu-cb"
+    backend: "ovms"
+    precision: "int4"
+    pipeline_type: "continuous_batching"
+    device_filter:
+      min_vram_mb: 6144
+      arch_tiers: ["xe_integrated"]
+    ovms_config:
+      max_num_seqs: 32
+      cache_size: 2
+      dynamic_quantization: false
+      kv_cache_precision: "fp16"
+    source_model:
+      hf_repo: "OpenVINO/Mistral-7B-Instruct-v0.3-int4-ov"
+      format: "openvino_ir"
+    memory_estimate_mb: 5000
+    runnable: true
+
+  - id: "mistral7b-int8-arc-cb"
+    description: "ovms-int8-arc-hq-cb"
+    backend: "ovms"
+    precision: "int8"
+    pipeline_type: "continuous_batching"
+    device_filter:
+      min_vram_mb: 12288
+      arch_tiers: ["arc_alchemist", "arc_battlemage"]
+    ovms_config:
+      max_num_seqs: 128
+      cache_size: 4
+      dynamic_quantization: false
+      kv_cache_precision: "fp16"
+    source_model:
+      hf_repo: "mistralai/Mistral-7B-Instruct-v0.3"
+      format: "pytorch"
+    memory_estimate_mb: 10500
+    runnable: true

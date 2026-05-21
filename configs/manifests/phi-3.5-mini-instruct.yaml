@@ -1,0 +1,81 @@
+# iNIM Model Manifest: Microsoft Phi-3.5 Mini Instruct
+version: "1.0"
+model_name: "microsoft/Phi-3.5-mini-instruct"
+model_id: "phi-3.5-mini-instruct"
+
+profiles:
+  - id: "phi35-int4-arc-hq-cb"
+    description: "ovms-int4-arc-hq-cb"
+    backend: "ovms"
+    precision: "int4"
+    pipeline_type: "continuous_batching"
+    device_filter:
+      min_vram_mb: 8192
+      arch_tiers: ["arc_alchemist", "arc_battlemage"]
+    ovms_config:
+      max_num_seqs: 256
+      cache_size: 4
+      dynamic_quantization: true
+      kv_cache_precision: "int8"
+    source_model:
+      hf_repo: "OpenVINO/Phi-3.5-mini-instruct-int4-ov"
+      format: "openvino_ir"
+    memory_estimate_mb: 6500
+    runnable: true
+
+  - id: "phi35-int4-arc-cb"
+    description: "ovms-int4-arc-cb"
+    backend: "ovms"
+    precision: "int4"
+    pipeline_type: "continuous_batching"
+    device_filter:
+      min_vram_mb: 4096
+      arch_tiers: ["arc_alchemist", "arc_battlemage"]
+    ovms_config:
+      max_num_seqs: 128
+      cache_size: 2
+      dynamic_quantization: true
+      kv_cache_precision: "int8"
+    source_model:
+      hf_repo: "OpenVINO/Phi-3.5-mini-instruct-int4-ov"
+      format: "openvino_ir"
+    memory_estimate_mb: 3200
+    runnable: true
+
+  - id: "phi35-int4-igpu-cb"
+    description: "ovms-int4-igpu-cb"
+    backend: "ovms"
+    precision: "int4"
+    pipeline_type: "continuous_batching"
+    device_filter:
+      min_vram_mb: 4096
+      arch_tiers: ["xe_integrated"]
+    ovms_config:
+      max_num_seqs: 64
+      cache_size: 2
+      dynamic_quantization: false
+      kv_cache_precision: "fp16"
+    source_model:
+      hf_repo: "OpenVINO/Phi-3.5-mini-instruct-int4-ov"
+      format: "openvino_ir"
+    memory_estimate_mb: 3500
+    runnable: true
+
+  - id: "phi35-int4-uhd-st"
+    description: "ovms-int4-igpu-st"
+    backend: "ovms"
+    precision: "int4-sym"
+    pipeline_type: "stateful"
+    device_filter:
+      min_vram_mb: 2048
+      arch_tiers: ["uhd_integrated"]
+    ovms_config:
+      max_num_seqs: 16
+      cache_size: 1
+      dynamic_quantization: false
+      kv_cache_precision: "fp16"
+    source_model:
+      hf_repo: "OpenVINO/Phi-3.5-mini-instruct-int4-ov"
+      format: "openvino_ir"
+    memory_estimate_mb: 2200
+    runnable: true
