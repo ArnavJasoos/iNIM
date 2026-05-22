@@ -334,7 +334,7 @@ class GGUFConverter(ModelConverter):
         except FileNotFoundError:
             raise ModelConversionError(
                 "optimum-cli not found. Install with: "
-                "pip install 'optimum-intel[openvino]' nncf",
+                "pip install 'optimum-intel[openvino]' nncf --extra-index-url https://download.pytorch.org/whl/cpu",
             )
 
         if result.returncode != 0:

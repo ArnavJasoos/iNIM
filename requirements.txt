@@ -1,5 +1,7 @@
-# =============================================================================
 # iNIM Python Dependencies
+#
+# Note: For CPU-only installation to avoid downloading heavy CUDA packages:
+# pip install -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cpu
 # =============================================================================
 
 # Core OpenVINO runtime and inference

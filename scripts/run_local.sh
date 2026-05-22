@@ -75,7 +75,7 @@ echo " Building iNIM Docker image..."
 echo "════════════════════════════════════════════════"
 
 cd "$PROJECT_ROOT"
-docker build \
+docker build --no-cache\
     -f docker/Dockerfile \
     -t "${IMAGE_NAME}:${IMAGE_TAG}" \
     .
@@ -96,7 +96,7 @@ docker run \
     --name "${CONTAINER_NAME}" \
     --device /dev/dri \
     -v /dev/dri:/dev/dri \
-    --group-add render \
+    --group-add 110 \
     -p "${SERVER_PORT}:8000" \
     -e "INIM_MODEL=${MODEL}" \
     ${HF_TOKEN_ARG} \

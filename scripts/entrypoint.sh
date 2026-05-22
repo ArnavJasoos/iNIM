@@ -122,8 +122,19 @@ else
     "
 fi
 
-# Insert CORS config after the server { line
-sed -i "/client_max_body_size/a\\${CORS_CONFIG}" "$NGINX_CONF"
+# Insert CORS config after the client_max_body_size line
+python3 -c "
+import sys
+conf_path = sys.argv[1]
+cors_config = sys.argv[2]
+with open(conf_path, 'r') as f:
+    content = f.read()
+target = 'client_max_body_size 100m;'
+if target in content:
+    content = content.replace(target, target + '\n' + cors_config)
+with open(conf_path, 'w') as f:
+    f.write(content)
+" "$NGINX_CONF" "$CORS_CONFIG"
 
 # ---------------------------------------------------------------------------
 # Ensure cache directories exist

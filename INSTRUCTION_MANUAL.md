@@ -594,8 +594,8 @@ To write custom converters, add new profiles, or modify the orchestrator pipelin
 python3 -m venv venv
 source venv/bin/activate
 
-# 2. Install development packages with editable source
-pip install -e ".[dev]"
+# 2. Install development packages with editable source (avoiding heavy CUDA libraries)
+pip install -e ".[dev]" --extra-index-url https://download.pytorch.org/whl/cpu
 ```
 
 ### Running Unit Tests

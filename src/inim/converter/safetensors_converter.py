@@ -103,7 +103,7 @@ class SafetensorsConverter(ModelConverter):
         except FileNotFoundError:
             raise ModelConversionError(
                 "optimum-cli not found. Install with: "
-                "pip install 'optimum-intel[openvino]' nncf",
+                "pip install 'optimum-intel[openvino]' nncf --extra-index-url https://download.pytorch.org/whl/cpu",
             )
 
         if result.returncode != 0:
@@ -217,7 +217,7 @@ class SafetensorsConverter(ModelConverter):
                 "optimum-intel[openvino] is not installed. "
                 "Required for safetensors/PyTorch → OpenVINO IR conversion.",
                 details=(
-                    "Install with: pip install 'optimum-intel[openvino]' nncf\n"
+                    "Install with: pip install 'optimum-intel[openvino]' nncf --extra-index-url https://download.pytorch.org/whl/cpu\n"
                     "Or use a pre-converted OpenVINO IR model to skip conversion."
                 ),
             )

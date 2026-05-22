@@ -28,7 +28,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Install Python dependencies for model conversion
 COPY requirements.txt /tmp/requirements.txt
 RUN pip install --no-cache-dir --prefix=/install \
-    -r /tmp/requirements.txt
+    -r /tmp/requirements.txt --extra-index-url https://download.pytorch.org/whl/cpu
 
 # =============================================================================
 # Stage 2: Runtime — Production container
@@ -58,12 +58,22 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY --from=builder /install /usr/local
 
 # ---------------------------------------------------------------------------
+# Create Python virtual environment
+# ---------------------------------------------------------------------------
+RUN python3 -m venv /opt/venv
+
+ENV PATH="/opt/venv/bin:${PATH}"
+
+RUN pip install --upgrade pip setuptools wheel
+
+# ---------------------------------------------------------------------------
 # Ensure additional Python packages for the orchestrator
 # ---------------------------------------------------------------------------
-RUN pip3 install --no-cache-dir \
-    pyyaml>=6.0 \
-    requests>=2.31 \
-    huggingface_hub>=0.24
+RUN pip install --no-cache-dir \
+    "pyyaml>=6.0" \
+    "requests>=2.31" \
+    "huggingface_hub>=0.24"
+
 
 # ---------------------------------------------------------------------------
 # Create iNIM directory structure
@@ -92,7 +102,7 @@ RUN rm -f /etc/nginx/sites-enabled/default \
     && rm -f /etc/nginx/conf.d/default.conf
 
 # Ensure nginx includes our config
-RUN echo "include /etc/nginx/conf.d/*.conf;" >> /etc/nginx/nginx.conf || true
+#RUN echo "include /etc/nginx/conf.d/*.conf;" >> /etc/nginx/nginx.conf || true
 
 # ---------------------------------------------------------------------------
 # Copy scripts

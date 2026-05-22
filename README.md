@@ -173,7 +173,8 @@ For any other model, iNIM generates a dynamic manifest automatically.
 ```bash
 # Clone and install in development mode
 cd iNIM
-pip install -e ".[dev]"
+# For CPU-only installation (recommended to avoid heavy CUDA libraries):
+pip install -e ".[dev]" --extra-index-url https://download.pytorch.org/whl/cpu
 
 # Run unit tests (no GPU required)
 pytest tests/ -v
